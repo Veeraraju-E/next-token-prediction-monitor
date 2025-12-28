@@ -2,6 +2,11 @@
 
 A minimalist, fast web application for monitoring next-token-prediction probability distributions of LLMs.
 
+<p align="center">
+  <img src="assets/ntp-monitor.png" alt="Next Token Prediction Monitor" width="700"/>
+</p>
+
+
 ## Features
 
 - **Model Loading**: Load any HuggingFace model or custom models with modified weights (.pt files)
@@ -61,13 +66,6 @@ To use custom modified models:
    - **Custom Weights Path**: Path to your `.pt` file
 
 The system will load the base model and then apply your custom weights.
-
-## Performance
-
-- Optimized for models <1.5B parameters
-- Debounced API calls to prevent excessive requests
-- GPU acceleration when available
-- Fast tokenization and inference
 
 ## Built With
 
