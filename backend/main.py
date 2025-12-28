@@ -91,24 +91,36 @@ async def load_model(request: ModelLoadRequest):
     global model, tokenizer
     
     try:
+        print(f"Loading model: {request.model_path}")
+        
         # Load tokenizer
+        print("Loading tokenizer...")
         tokenizer = AutoTokenizer.from_pretrained(request.model_path)
         if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
+        print("Tokenizer loaded successfully")
         
         # Load base model
-        model = AutoModelForCausalLM.from_pretrained(request.model_path, torch_dtype=torch.float16 if device == "cuda" else torch.float32, device_map="auto" if device == "cuda" else None)
+        print("Loading model (this may take a while, especially on first download)...")
+        model = AutoModelForCausalLM.from_pretrained(
+            request.model_path, 
+            torch_dtype=torch.float16 if device == "cuda" else torch.float32, 
+            device_map="auto" if device == "cuda" else None
+        )
+        print("Model loaded successfully")
         
         # Load custom weights if provided
         if request.custom_weights_path and os.path.exists(request.custom_weights_path):
+            print(f"Loading custom weights from {request.custom_weights_path}...")
             custom_weights = torch.load(request.custom_weights_path, map_location=device)
             model.load_state_dict(custom_weights, strict=False)
-            print(f"Loaded custom weights from {request.custom_weights_path}")
+            print(f"Custom weights loaded successfully")
         
         model.eval()
         if device == "cpu":
             model = model.to(device)
         
+        print(f"Model '{request.model_path}' ready on {device}")
         return {
             "status": "success",
             "model_path": request.model_path,
@@ -116,7 +128,9 @@ async def load_model(request: ModelLoadRequest):
             "vocab_size": len(tokenizer)
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error loading model: {str(e)}")
+        error_msg = f"Error loading model: {str(e)}"
+        print(f"ERROR: {error_msg}")
+        raise HTTPException(status_code=500, detail=error_msg)
 
 
 @app.post("/api/tokenize", response_model=List[TokenInfo])

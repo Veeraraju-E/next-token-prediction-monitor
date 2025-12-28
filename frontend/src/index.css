@@ -1,8 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 body {
   margin: 0;
@@ -12,7 +13,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #fafafa;
-  color: #1a1a1a;
+  color: #1f1f1f;
+  font-weight: 400;
+  line-height: 1.75;
 }
 
 * {
@@ -27,5 +30,18 @@ html {
 /* Remove default button styles */
 button {
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Subtle transitions for all interactive elements */
+a, button, input, textarea, select {
+  transition: opacity 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+
+/* Quiet hover states */
+a:hover {
+  opacity: 0.7;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
 }
 

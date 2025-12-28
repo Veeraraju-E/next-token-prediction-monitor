@@ -104,9 +104,9 @@ function App() {
 
   return (
     <div className="min-h-screen bg-anthropic-bg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <header className="mb-10">
-          <h1 className="text-3xl sm:text-4xl font-semibold text-anthropic-text mb-3 tracking-tight">
+      <div className="max-w-3xl mx-auto px-6 py-16 sm:py-20">
+        <header className="mb-16">
+          <h1 className="text-2xl sm:text-3xl font-medium text-anthropic-text mb-4 tracking-tight">
             Next Token Prediction Monitor
           </h1>
           <p className="text-base text-anthropic-text-secondary leading-relaxed">
@@ -117,7 +117,7 @@ function App() {
         {!modelLoaded ? (
           <ModelLoader onModelLoaded={() => setModelLoaded(true)} />
         ) : (
-          <div className="space-y-8">
+          <div className="space-y-12">
             <div className="flex items-center justify-end">
               <button
                 onClick={() => {
@@ -127,7 +127,7 @@ function App() {
                   setPredictions({})
                   setSelectedTokenIndex(null)
                 }}
-                className="px-4 py-2 text-sm font-medium text-anthropic-text-secondary hover:text-anthropic-text transition-colors rounded-md hover:bg-anthropic-surface"
+                className="px-3 py-1.5 text-sm font-normal text-anthropic-text-secondary hover:text-anthropic-text transition-opacity rounded-anthropic border border-anthropic-border bg-anthropic-surface hover:opacity-70"
               >
                 Change Model
               </button>

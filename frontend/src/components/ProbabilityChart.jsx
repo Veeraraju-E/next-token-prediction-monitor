@@ -22,7 +22,7 @@ function ProbabilityChart({ predictions, loading, selectedTokenIndex }) {
   }, [predictions])
 
   const getColor = (index) => {
-    // Anthropic-inspired gradient colors
+    // Muted, understated colors
     const colors = [
       '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd',
       '#bfdbfe', '#dbeafe', '#eff6ff'
@@ -32,10 +32,10 @@ function ProbabilityChart({ predictions, loading, selectedTokenIndex }) {
 
   if (loading) {
     return (
-      <div className="bg-anthropic-surface border border-anthropic-border rounded-lg shadow-anthropic p-8">
+      <div className="pt-12 pb-16">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-anthropic-accent mb-3"></div>
+            <div className="inline-block animate-spin rounded-full h-6 w-6 border border-anthropic-border border-t-anthropic-accent mb-4"></div>
             <div className="text-anthropic-text-secondary text-sm">Loading predictions...</div>
           </div>
         </div>
@@ -45,10 +45,10 @@ function ProbabilityChart({ predictions, loading, selectedTokenIndex }) {
 
   if (chartData.length === 0) {
     return (
-      <div className="bg-anthropic-surface border border-anthropic-border rounded-lg shadow-anthropic p-8">
+      <div className="pt-12 pb-16">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="text-anthropic-text-secondary mb-2 text-sm">
+            <div className="text-anthropic-text-secondary text-sm">
               Click on a token above to see conditional probabilities
             </div>
           </div>
@@ -61,10 +61,10 @@ function ProbabilityChart({ predictions, loading, selectedTokenIndex }) {
     if (active && payload && payload.length) {
       const data = payload[0].payload
       return (
-        <div className="bg-white border border-anthropic-border rounded-lg shadow-anthropic-md p-3">
-          <p className="font-mono text-sm font-semibold mb-1 text-anthropic-text">{data.fullToken}</p>
+        <div className="bg-anthropic-surface border border-anthropic-border rounded-anthropic shadow-anthropic-subtle p-3">
+          <p className="font-mono text-sm font-normal mb-1 text-anthropic-text">{data.fullToken}</p>
           <p className="text-xs text-anthropic-text-secondary">
-            Probability: <span className="font-semibold text-anthropic-text">{data.percentage}%</span>
+            Probability: <span className="font-normal text-anthropic-text">{data.percentage}%</span>
           </p>
         </div>
       )
@@ -73,9 +73,9 @@ function ProbabilityChart({ predictions, loading, selectedTokenIndex }) {
   }
 
   return (
-    <div className="bg-anthropic-surface border border-anthropic-border rounded-lg shadow-anthropic p-6">
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold text-anthropic-text mb-2">
+    <div className="pt-8 border-t border-anthropic-divider">
+      <div className="mb-8">
+        <h3 className="text-lg font-medium text-anthropic-text mb-2">
           Conditional Probabilities{selectedTokenIndex !== null ? ` (Token ${selectedTokenIndex + 1})` : ''}
         </h3>
         <p className="text-sm text-anthropic-text-secondary">
@@ -87,50 +87,52 @@ function ProbabilityChart({ predictions, loading, selectedTokenIndex }) {
         <BarChart
           data={chartData}
           layout="vertical"
-          margin={{ top: 5, right: 30, left: 120, bottom: 5 }}
+          margin={{ top: 5, right: 20, left: 100, bottom: 5 }}
         >
           <XAxis 
             type="number" 
             domain={[0, 'dataMax']}
             tickFormatter={(value) => `${(value * 100).toFixed(1)}%`}
-            stroke="#9ca3af"
-            fontSize={12}
+            stroke="#d1d5db"
+            fontSize={11}
             tick={{ fill: '#6b7280' }}
+            axisLine={false}
           />
           <YAxis 
             type="category" 
             dataKey="token"
-            width={110}
-            stroke="#9ca3af"
+            width={90}
+            stroke="#d1d5db"
             fontSize={11}
             tick={{ fill: '#6b7280' }}
+            axisLine={false}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="probability" radius={[0, 6, 6, 0]}>
+          <Bar dataKey="probability" radius={[0, 2, 2, 0]}>
             {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={getColor(index)} />
+              <Cell key={`cell-${index}`} fill={getColor(index)} opacity={0.85} />
             ))}
           </Bar>
         </BarChart>
       </ResponsiveContainer>
 
-      <div className="mt-6 pt-6 border-t border-anthropic-border">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+      <div className="mt-10 pt-8 border-t border-anthropic-divider">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
           <div>
             <span className="text-anthropic-text-secondary">Most Likely: </span>
-            <span className="font-mono font-semibold text-anthropic-text">
+            <span className="font-mono font-normal text-anthropic-text">
               {chartData[0]?.fullToken || 'N/A'}
             </span>
           </div>
           <div>
             <span className="text-anthropic-text-secondary">Probability: </span>
-            <span className="font-semibold text-anthropic-text">
+            <span className="font-normal text-anthropic-text">
               {chartData[0]?.percentage || '0.00'}%
             </span>
           </div>
           <div>
             <span className="text-anthropic-text-secondary">Total Tokens: </span>
-            <span className="font-semibold text-anthropic-text">
+            <span className="font-normal text-anthropic-text">
               {Object.keys(predictions).length}
             </span>
           </div>
