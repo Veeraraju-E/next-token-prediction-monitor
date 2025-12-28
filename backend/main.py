@@ -6,7 +6,6 @@ from contextlib import asynccontextmanager
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import os
-import json
 
 # Global model and tokenizer storage
 model = None
@@ -34,10 +33,10 @@ async def lifespan(app: FastAPI):
         if device == "cpu":
             model = model.to(device)
         
-        print(f"✓ Default model '{DEFAULT_MODEL}' loaded successfully on {device}")
+        print(f"[INFO] Default model '{DEFAULT_MODEL}' loaded successfully on {device}")
     except Exception as e:
-        print(f"⚠ Warning: Could not auto-load default model: {str(e)}")
-        print("You can still load a model manually via the /api/load-model endpoint")
+        print(f"[ERROR] Could not auto-load default model: {str(e)}")
+        print("\n[INFO] You can still load a model manually via the /api/load-model endpoint")
     
     yield
     
@@ -46,7 +45,7 @@ app = FastAPI(title="Next Token Prediction Monitor", lifespan=lifespan)
 # CORS middleware for frontend communication
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify your frontend URL
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -102,8 +101,7 @@ async def load_model(request: ModelLoadRequest):
         
         # Load base model
         print("Loading model (this may take a while, especially on first download)...")
-        model = AutoModelForCausalLM.from_pretrained(
-            request.model_path, 
+        model = AutoModelForCausalLM.from_pretrained(request.model_path, 
             torch_dtype=torch.float16 if device == "cuda" else torch.float32, 
             device_map="auto" if device == "cuda" else None
         )
@@ -147,9 +145,9 @@ async def tokenize_text(request: TextRequest):
         
         token_infos = []
         for token_id, (start_pos, end_pos) in zip(input_ids, offsets):
-            # Decode the token to get its string representation
+            # Decode
             token = tokenizer.decode([token_id])
-            # Clean up the token (remove special characters that tokenizer adds)
+            # Clean up the token
             if token.startswith(" ") and len(token) > 1:
                 token = token[1:]
             
@@ -167,22 +165,15 @@ async def predict_next_token(request: TextRequest):
         raise HTTPException(status_code=400, detail="Model not loaded")
     
     try:
-        # Tokenize input
-        token_infos = await tokenize_text(request)
-        
-        # Get model predictions
-        inputs = tokenizer(request.text, return_tensors="pt").to(device)
-        
+        token_infos = await tokenize_text(request) # Tokenize
+        inputs = tokenizer(request.text, return_tensors="pt").to(device) # Get model predictions
         with torch.no_grad():
             outputs = model(**inputs)
-            logits = outputs.logits[0, -1, :]  # Last token's logits
+            logits = outputs.logits[0, -1, :]  # Get last token's logits
             probs = torch.softmax(logits, dim=-1)
         
-        # Get top predictions
-        top_k = 50  # Show top 50 tokens
+        top_k = 50  # Show top 50 tokens from vocabulary
         top_probs, top_indices = torch.topk(probs, top_k)
-        
-        # Convert to dictionary
         predictions = {}
         for prob, idx in zip(top_probs, top_indices):
             token = tokenizer.decode([idx.item()])
@@ -200,33 +191,25 @@ async def predict_conditional(request: TokenPredictionRequest):
         raise HTTPException(status_code=400, detail="Model not loaded")
     
     try:
-        # Tokenize input
-        token_infos = await tokenize_text(TextRequest(text=request.text))
-        
+        token_infos = await tokenize_text(TextRequest(text=request.text)) # Tokenize
         if request.token_index is None or request.token_index >= len(token_infos):
             raise HTTPException(status_code=400, detail="Invalid token index")
         
-        # Get text up to (but not including) the target token
         target_token = token_infos[request.token_index]
         context_text = request.text[:target_token.start_pos]
         
         if not context_text:
-            # If no context, return uniform distribution or empty
             return PredictionResponse(tokens=token_infos, conditional_predictions={})
         
-        # Get model predictions for the context
-        inputs = tokenizer(context_text, return_tensors="pt").to(device)
-        
+        inputs = tokenizer(context_text, return_tensors="pt").to(device) # Get model predictions for the context
         with torch.no_grad():
             outputs = model(**inputs)
             logits = outputs.logits[0, -1, :]  # Last token's logits
             probs = torch.softmax(logits, dim=-1)
         
-        # Get top predictions
         top_k = 50
         top_probs, top_indices = torch.topk(probs, top_k)
         
-        # Convert to dictionary
         predictions = {}
         for prob, idx in zip(top_probs, top_indices):
             token = tokenizer.decode([idx.item()])
@@ -240,4 +223,3 @@ async def predict_conditional(request: TokenPredictionRequest):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
-

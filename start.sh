@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Start script for Next Token Prediction Monitor
-
 echo "Starting Next Token Prediction Monitor..."
 echo ""
 
@@ -41,13 +39,13 @@ FRONTEND_PID=$!
 cd ..
 
 echo ""
-echo "=========================================="
-echo "Next Token Prediction Monitor is running!"
-echo "=========================================="
-echo "Backend: http://localhost:8000"
-echo "Frontend: http://localhost:3000"
+echo " _   _ _____ ____  "
+echo "| \\ | |_  _ |  _ \\ "
+echo "|  \\| | | | | |_) |"
+echo "| |\\  | | | |  __/ "
+echo "|_| \\_| |_| |_|    "
 echo ""
-echo "Press Ctrl+C to stop both servers"
+echo "Press Ctrl+C to exit."
 echo ""
 
 # Wait for user interrupt

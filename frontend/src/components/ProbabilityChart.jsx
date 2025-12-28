@@ -22,10 +22,9 @@ function ProbabilityChart({ predictions, loading, selectedTokenIndex }) {
   }, [predictions])
 
   const getColor = (index) => {
-    // Muted, understated colors
     const colors = [
-      '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd',
-      '#bfdbfe', '#dbeafe', '#eff6ff'
+      '#8B6F47', '#A0826D', '#B89A7A', '#C9B08A',
+      '#D4C4A8', '#E0D4C0', '#EDE5D8'
     ]
     return colors[index % colors.length]
   }
@@ -93,18 +92,18 @@ function ProbabilityChart({ predictions, loading, selectedTokenIndex }) {
             type="number" 
             domain={[0, 'dataMax']}
             tickFormatter={(value) => `${(value * 100).toFixed(1)}%`}
-            stroke="#d1d5db"
+            stroke="#d1cec8"
             fontSize={11}
-            tick={{ fill: '#6b7280' }}
+            tick={{ fill: '#6b6658' }}
             axisLine={false}
           />
           <YAxis 
             type="category" 
             dataKey="token"
             width={90}
-            stroke="#d1d5db"
+            stroke="#d1cec8"
             fontSize={11}
-            tick={{ fill: '#6b7280' }}
+            tick={{ fill: '#6b6658' }}
             axisLine={false}
           />
           <Tooltip content={<CustomTooltip />} />

@@ -110,7 +110,8 @@ function App() {
             Next Token Prediction Monitor
           </h1>
           <p className="text-base text-anthropic-text-secondary leading-relaxed">
-            Type text and click on tokens to see conditional probability distributions
+            Type text and click on tokens to see conditional probability distributions. <br/>
+            {/* Pro tip: Type a phrase and finish with an extra space to see the distribution for the next token. */}
           </p>
         </header>
 

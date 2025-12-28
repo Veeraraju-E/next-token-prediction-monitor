@@ -8,16 +8,16 @@ export default {
     extend: {
       colors: {
         'anthropic': {
-          'bg': '#fafafa',
-          'surface': '#fefefe',
-          'border': '#e5e5e5',
-          'divider': '#f0f0f0',
-          'text': '#1f1f1f',
-          'text-secondary': '#6b7280',
-          'text-tertiary': '#9ca3af',
-          'accent': '#2563eb',
-          'accent-hover': '#1e40af',
-          'accent-light': '#f0f4ff',
+          'bg': '#faf9f7',
+          'surface': '#fefdfb',
+          'border': '#e8e5e0',
+          'divider': '#f0ede8',
+          'text': '#1f1d1a',
+          'text-secondary': '#6b6658',
+          'text-tertiary': '#9c9688',
+          'accent': '#8B6F47',
+          'accent-hover': '#6B5638',
+          'accent-light': '#f5f1eb',
         }
       },
       fontFamily: {

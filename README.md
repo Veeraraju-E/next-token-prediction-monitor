@@ -1,6 +1,6 @@
 # Next Token Prediction Monitor
 
-A minimalist, fast web application for monitoring next-token-prediction probability distributions of LLMs. Built with a clean, Anthropic-inspired UI.
+A minimalist, fast web application for monitoring next-token-prediction probability distributions of LLMs.
 
 ## Features
 
@@ -8,7 +8,15 @@ A minimalist, fast web application for monitoring next-token-prediction probabil
 - **Token Visualization**: Clear token demarcation using the model's tokenizer
 - **Conditional Probabilities**: Click on tokens to see conditional probability distributions
 - **Probability Charts**: Interactive bar charts showing top token predictions
-- **Fast Performance**: Optimized for models <1.5B parameters
+
+## Quickstart
+
+Please ensure you already have npm installed. Then, make the shell script executable, and run it.
+```bash
+chmod +x start.sh
+./start.sh
+```
+The API will be available at `http://localhost:3000` for playing around.
 
 ## Project Structure
 
@@ -29,57 +37,11 @@ monitor-ntp/
 └── README.md
 ```
 
-## Setup
-
-### Backend Setup
-
-1. Navigate to the backend directory:
-```bash
-cd backend
-```
-
-2. Create a virtual environment (recommended):
-```bash
-python -m venv venv
-source venv/bin/activate
-```
-
-3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-4. Run the backend server:
-```bash
-python main.py
-```
-
-The API will be available at `http://localhost:8000`
-
-### Frontend Setup
-
-1. Navigate to the frontend directory:
-```bash
-cd frontend
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Run the development server:
-```bash
-npm run dev
-```
-
-The frontend will be available at `http://localhost:3000`
-
 ## Usage
 
 1. **Load a Model**:
    - Enter a HuggingFace model ID (e.g., `gpt2`, `distilgpt2`, `microsoft/DialoGPT-small`)
-   - Optionally provide a path to custom weights (.pt file)
+   - Optionally provide a path to custom weights (.pt file) [WIP]
    - Click "Load Model"
 
 2. **Using the Application**:
@@ -89,13 +51,7 @@ The frontend will be available at `http://localhost:3000`
    - The chart shows what the model predicted at that position given the previous context
    - Click the same token again to deselect it
 
-## API Endpoints
-
-- `POST /api/load-model`: Load a model from HuggingFace or local path
-- `POST /api/tokenize`: Tokenize text and return token information
-- `POST /api/predict-conditional`: Get conditional probabilities for a token at a specific position
-
-## Custom Models
+## Custom Models [WIP]
 
 To use custom modified models:
 
@@ -113,15 +69,12 @@ The system will load the base model and then apply your custom weights.
 - GPU acceleration when available
 - Fast tokenization and inference
 
-## Technology Stack
+## Built With
 
 - **Backend**: FastAPI, PyTorch, Transformers
 - **Frontend**: React, Vite, Tailwind CSS, Recharts
-- **Styling**: Anthropic-inspired minimalist design
 
 ## Notes
 
-- Ensure you have CUDA available if using GPU acceleration
-- Models are loaded in float16 on GPU for better performance
-- The frontend proxies API requests to the backend automatically
-
+- Ensure you have CUDA available if using GPU acceleration. I may or may not work on getting an actual cloud support.
+- If CUDA is available, then I default to fp16.
