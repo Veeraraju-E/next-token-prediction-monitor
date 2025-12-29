@@ -14,10 +14,7 @@ def download_gpt2_small():
         print("[INFO] Tokenizer downloaded successfully")
         
         print("\n[2/2] Downloading model...")
-        model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            torch_dtype=torch.float32,  # Use float32 for download (can be converted later)
-        )
+        model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float32)
         print("[INFO] Model downloaded successfully")
         
         print(f"\n[INFO] GPT-2 small model downloaded and cached successfully!")
@@ -35,4 +32,3 @@ def download_gpt2_small():
 if __name__ == "__main__":
     download_gpt2_small()
     print("\n[INFO] Done!")
-
